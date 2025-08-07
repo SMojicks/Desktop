@@ -13,7 +13,7 @@
     <!-- Login Section -->
     <div id="loginSection" class="min-h-screen flex flex-col">
         <div class="header">
-            <h1>☕ Brewed Bliss Cafe</h1>
+            <h1>☕ Cafe S</h1>
             <p>Your perfect coffee experience awaits</p>
         </div>
         
@@ -81,11 +81,15 @@
             <button class="nav-tab" onclick="showTab('feedback')">Community Feedback</button>
         </div>
 
-        <!-- Reservations Tab -->
-        <div id="reservations" class="tab-content active">
-            <h2>Reserve Your Seat</h2>
+
+
+        <!-- NEW RESERVATION TAB -->
+<div id="reservations" class="tab-content active">
+    <div class="reservation-grid">
+        <!-- Cafe Layout Section -->
+        <div class="cafe-section">
+            <h2>Select Your Table</h2>
             <div class="cafe-layout">
-                <h3 style="text-align: center; margin-bottom: 20px; color: #667eea;">Cafe Layout</h3>
                 <div class="cafe-grid" id="cafeGrid"></div>
                 <div class="legend">
                     <div class="legend-item">
@@ -102,12 +106,70 @@
                     </div>
                 </div>
             </div>
-            <div id="reservationInfo" class="reservation-info" style="display: none;">
-                <h4>Reservation Details</h4>
-                <p>Table: <span id="selectedTable"></span></p>
-                <button class="submit-btn" onclick="confirmReservation()">Confirm Reservation</button>
-            </div>
         </div>
+
+        <!-- Reservation Form Section -->
+        <div class="reservation-form">
+            <h3>Reservation Details</h3>
+            
+            <div class="success-message" id="successMessage">
+                <strong>🎉 Reservation Confirmed!</strong><br>
+                Your table has been reserved successfully.
+            </div>
+
+            <div class="selected-table-info" id="selectedTableInfo">
+                <strong>Selected Table: <span id="selectedTableNumber"></span></strong>
+            </div>
+
+            <form id="reservationForm">
+                <div class="form-group">
+                    <label for="customerName">Name *</label>
+                    <input type="text" id="customerName" name="customerName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="contactNumber">Contact Number *</label>
+                    <input type="tel" id="contactNumber" name="contactNumber" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="numberOfDiners">Number of Diners *</label>
+                    <select id="numberOfDiners" name="numberOfDiners" required>
+                        <option value="">Select number of diners</option>
+                        <option value="1">1 Person</option>
+                        <option value="2">2 People</option>
+                        <option value="3">3 People</option>
+                        <option value="4">4 People</option>
+                        <option value="5">5 People</option>
+                        <option value="6">6 People</option>
+                        <option value="7">7 People</option>
+                        <option value="8">8+ People</option>
+                    </select>
+                </div>
+
+                <div class="datetime-group">
+                    <div class="form-group">
+                        <label for="reservationDate">Date *</label>
+                        <input type="date" id="reservationDate" name="reservationDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reservationTime">Time *</label>
+                        <input type="time" id="reservationTime" name="reservationTime" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Special Requests / Notes</label>
+                    <textarea id="notes" name="notes" placeholder="Any special requests, dietary restrictions, or additional notes..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn" disabled>
+                    Select a Table to Continue
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
 
         <!-- Menu Tab -->
         <div id="menu" class="tab-content">

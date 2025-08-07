@@ -85,6 +85,12 @@
             renderCafeLayout();
             renderMenu();
             renderFeedback();
+             setMinDate();
+               // Add form submit event listener
+    const form = document.getElementById('reservationForm');
+    if (form) {
+        form.addEventListener('submit', handleReservation);
+    }
         }
 
         // Render cafe layout
@@ -101,33 +107,120 @@
             }
         }
 
-        // Select table
-        function selectTable(tableNumber) {
-            if (tableStatus[tableNumber] === 'occupied') return;
+        // // Select table
+        // function selectTable(tableNumber) {
+        //     if (tableStatus[tableNumber] === 'occupied') return;
             
-            // Reset previous selection
-            if (selectedTable) {
-                document.querySelector(`[onclick="selectTable(${selectedTable})"]`).classList.remove('selected');
-            }
+        //     // Reset previous selection
+        //     if (selectedTable) {
+        //         document.querySelector(`[onclick="selectTable(${selectedTable})"]`).classList.remove('selected');
+        //     }
             
-            selectedTable = tableNumber;
-            document.querySelector(`[onclick="selectTable(${tableNumber})"]`).classList.add('selected');
+        //     selectedTable = tableNumber;
+        //     document.querySelector(`[onclick="selectTable(${tableNumber})"]`).classList.add('selected');
             
-            // Show reservation info
-            document.getElementById('selectedTable').textContent = tableNumber;
-            document.getElementById('reservationInfo').style.display = 'block';
-        }
+        //     // Show reservation info
+        //     document.getElementById('selectedTable').textContent = tableNumber;
+        //     document.getElementById('reservationInfo').style.display = 'block';
+        // }
 
-        // Confirm reservation
-        function confirmReservation() {
-            if (selectedTable) {
-                tableStatus[selectedTable] = 'occupied';
-                alert(`Table ${selectedTable} has been reserved successfully!`);
-                renderCafeLayout();
-                document.getElementById('reservationInfo').style.display = 'none';
-                selectedTable = null;
-            }
+        function selectTable(tableNumber) {
+    if (tableStatus[tableNumber] === 'occupied') {
+        return; // Can't select occupied tables
+    }
+    
+    // Reset previous selection
+    if (selectedTable) {
+        const prevTable = document.querySelector(`[onclick="selectTable(${selectedTable})"]`);
+        if (prevTable) {
+            prevTable.classList.remove('selected');
+            prevTable.classList.add('available');
         }
+    }
+    
+    // Select new table
+    selectedTable = tableNumber;
+    const currentTable = document.querySelector(`[onclick="selectTable(${tableNumber})"]`);
+    currentTable.classList.remove('available');
+    currentTable.classList.add('selected');
+    
+    // Show selected table info
+    document.getElementById('selectedTableNumber').textContent = tableNumber;
+    document.getElementById('selectedTableInfo').classList.add('show');
+    
+    // Enable submit button
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Confirm Reservation';
+}
+
+        // // Confirm reservation
+        // function confirmReservation() {
+        //     if (selectedTable) {
+        //         tableStatus[selectedTable] = 'occupied';
+        //         alert(`Table ${selectedTable} has been reserved successfully!`);
+        //         renderCafeLayout();
+        //         document.getElementById('reservationInfo').style.display = 'none';
+        //         selectedTable = null;
+        //     }
+        // }
+
+
+        // REMOVE the old confirmReservation function entirely and ADD:
+
+// Set minimum date to today
+function setMinDate() {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    const dateInput = document.getElementById('reservationDate');
+    dateInput.min = tomorrow.toISOString().split('T')[0];
+}
+
+// Handle form submission
+function handleReservation(event) {
+    event.preventDefault();
+    
+    if (!selectedTable) {
+        alert('Please select a table first!');
+        return;
+    }
+
+    const formData = new FormData(event.target);
+    const reservationData = {
+        table: selectedTable,
+        name: formData.get('customerName'),
+        contact: formData.get('contactNumber'),
+        diners: formData.get('numberOfDiners'),
+        date: formData.get('reservationDate'),
+        time: formData.get('reservationTime'),
+        notes: formData.get('notes')
+    };
+
+    // Simulate reservation processing
+    console.log('Reservation Data:', reservationData);
+    
+    // Mark table as occupied
+    tableStatus[selectedTable] = 'occupied';
+    
+    // Show success message
+    document.getElementById('successMessage').classList.add('show');
+    
+    // Reset form and selection
+    setTimeout(() => {
+        document.getElementById('reservationForm').reset();
+        document.getElementById('selectedTableInfo').classList.remove('show');
+        document.getElementById('successMessage').classList.remove('show');
+        
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Select a Table to Continue';
+        
+        selectedTable = null;
+        renderCafeLayout();
+    }, 3000);
+}
 
         // Render menu
         function renderMenu() {
